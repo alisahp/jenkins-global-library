@@ -18,7 +18,7 @@ def runPipeline() {
 
   def deploymentName = "${JOB_NAME}"
                         .split('/')[0]
-                        .replace('-fuchicorp', '')
+                        .replace('-mybestsea', '')
                         .replace('-build', '')
                         .replace('-deploy', '')
   def k8slabel = "jenkins-pipeline-${UUID.randomUUID().toString()}"
@@ -53,8 +53,8 @@ def runPipeline() {
       volumeMounts:
         - mountPath: /var/run/docker.sock
           name: docker-sock
-    - name: fuchicorptools
-      image: fuchicorp/buildtools
+    - name: myapptools
+      image: mybestsea/buildtools
       imagePullPolicy: Always
       resources:
         requests:
@@ -79,11 +79,11 @@ def runPipeline() {
     branch = "prod"
     break
 
-    case "qa": environment = "qa"
-    break
+//    case "qa": environment = "qa"
+//    break
 
-    case "dev": environment = "dev"
-    break
+//    case "dev": environment = "dev"
+//    break
 
     default:
         currentBuild.result = 'FAILURE'
@@ -95,7 +95,7 @@ def runPipeline() {
       choice(name: 'selectedDockerImage', choices: findDockerImages(branch), description: 'Please select docker image to deploy!'),
       booleanParam(defaultValue: false, description: 'Apply All Changes', name: 'terraformApply'),
       booleanParam(defaultValue: false, description: 'Destroy deployment', name: 'terraformDestroy'),
-      string(defaultValue: 'fuchicorp-google-service-account', name: 'common_service_account', description: 'Please enter service Account ID', trim: true),
+      string(defaultValue: 'mybestsea-google-service-account', name: 'common_service_account', description: 'Please enter service Account ID', trim: true),
       string(defaultValue: 'webplatform-configuration', name: 'deployment_configuration', description: 'Please enter configuration name', trim: true)
       ])])
 
@@ -108,7 +108,7 @@ def runPipeline() {
               stage('Poll code') {
                 checkout scm
                 sh """#!/bin/bash -e
-                cp -rf ${common_user} ${WORKSPACE}/deployment/terraform/fuchicorp-service-account.json
+                cp -rf ${common_user} ${WORKSPACE}/deployment/terraform/mybestsea-service-account.json
                 """
               }
 
@@ -117,8 +117,8 @@ def runPipeline() {
               file.write """
               deployment_environment    =  "${environment}"
               deployment_name           =  "${deploymentName}"
-              deployment_image          =  "docker.fuchicorp.com/${selectedDockerImage}"
-              credentials               =  "./fuchicorp-service-account.json"
+              deployment_image          =  "docker.mybestsea.com/${selectedDockerImage}"
+              credentials               =  "./mybestsea-service-account.json"
               """.stripIndent()
               sh "cat ${deployment_config} >> ${WORKSPACE}/deployment/terraform/deployment_configuration.tfvars"
             }
@@ -136,7 +136,7 @@ def runPipeline() {
                   }
                   if (branch == "prod") {
                     sh("""
-                      git config --global user.email 'jenkins@fuchicorp.com'
+                      git config --global user.email 'jenkins@mybestsea.com'
                       git config --global user.name  'Jenkins'
                       git config --global credential.helper cache
                       """)
@@ -214,7 +214,7 @@ def findDockerImages(branchName) {
   def versionList = []
   def token       = ""
   def myJsonreader = new JsonSlurper()
-  def nexusData = myJsonreader.parse(new URL("https://nexus.fuchicorp.com/service/rest/v1/components?repository=fuchicorp"))
+  def nexusData = myJsonreader.parse(new URL("https://nexus.mybestsea.com/service/rest/v1/components?repository=mybestsea"))
   nexusData.items.each {
     if (it.name.contains(branchName)) {
        versionList.add(it.name + ':' + it.version)
@@ -223,7 +223,7 @@ def findDockerImages(branchName) {
   while (true) {
     if (nexusData.continuationToken) {
       token = nexusData.continuationToken
-      nexusData = myJsonreader.parse(new URL("https://nexus.fuchicorp.com/service/rest/v1/components?repository=fuchicorp&continuationToken=${token}"))
+      nexusData = myJsonreader.parse(new URL("https://nexus.mybestsea.com/service/rest/v1/components?repository=mybestsea&continuationToken=${token}"))
       nexusData.items.each {
         if (it.name.contains(branchName)) {
            versionList.add(it.name + ':' + it.version)

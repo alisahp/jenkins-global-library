@@ -11,7 +11,7 @@ def runPipeline() {
   def k8slabel = "jenkins-pipeline-${UUID.randomUUID().toString()}"
   def deploymentName = "${JOB_NAME}"
                         .split('/')[0]
-                        .replace('-fuchicorp', '')
+                        .replace('-mybestsea', '')
                         .replace('-build', '')
                         .replace('-deploy', '')
 
@@ -19,14 +19,14 @@ def runPipeline() {
     case 'master': environment = 'prod'
     break
 
-    case 'qa': environment = 'qa'
-    break
+//  case 'qa': environment = 'qa'
+//  break
 
-    case 'dev': environment = 'dev'
-    break
+//  case 'dev': environment = 'dev'
+//  break
 
-    case 'tools': environment = 'tools'
-    break
+//  case 'tools': environment = 'tools'
+//  break
 
     default:
         currentBuild.result = 'FAILURE'
@@ -76,8 +76,8 @@ def runPipeline() {
               name: docker-sock
             - mountPath: /etc/secrets/service-account/
               name: google-service-account
-        - name: fuchicorptools
-          image: fuchicorp/buildtools
+        - name: myapptools
+          image: mybestsea/buildtools
           imagePullPolicy: Always
           command:
           - cat
@@ -102,7 +102,7 @@ def runPipeline() {
 
   podTemplate(name: k8slabel, label: k8slabel, yaml: slavePodTemplate) {
       node(k8slabel) {
-        container('fuchicorptools') {
+        container('myapptools') {
 
           stage("Polling SCM") {
             checkout scm
@@ -112,7 +112,7 @@ def runPipeline() {
             // sh "sleep 200"
             sh """
             mkdir -p ${WORKSPACE}/deployments/terraform/
-            cat  /etc/secrets/service-account/credentials.json > ${WORKSPACE}/deployments/terraform/fuchicorp-service-account.json
+            cat  /etc/secrets/service-account/credentials.json > ${WORKSPACE}/deployments/terraform/mybestsea-service-account.json
             ls ${WORKSPACE}/deployments/terraform/
             ## This script should move to docker container to set up ~/.kube/config
             sh /scripts/Dockerfile/set-config.sh
@@ -121,8 +121,8 @@ def runPipeline() {
             deployment_tfvars += """
             deployment_name        = \"${deploymentName}\"
             deployment_environment = \"${environment}\"
-            deployment_image       = \"docker.fuchicorp.com/${selectedDockerImage}\"
-            credentials            = \"./fuchicorp-service-account.json\"
+            deployment_image       = \"docker.mybestsea.com/${selectedDockerImage}\"
+            credentials            = \"./mybestsea-service-account.json\"
             """.stripIndent()
 
             writeFile(

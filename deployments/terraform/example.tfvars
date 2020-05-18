@@ -1,0 +1,5 @@
+#deployment_image = "hub.docker.com/u/alisahp/myapp:latest"
+#deployment_environment = "dev"
+#deployment_name = "myapp"
+#google_bucket_name = "mybestsea"
+#credentials = "mybestsea-service-account.json"

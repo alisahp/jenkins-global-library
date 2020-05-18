@@ -2,6 +2,7 @@
 package com.lib
 import groovy.json.JsonSlurper
 import hudson.FilePath
+import hudson.FilePath
 
 
 def runPipeline() {
@@ -27,7 +28,7 @@ def runPipeline() {
 
     case 'tools': environment = 'tools'
     break
-
+    break
     default:
         currentBuild.result = 'FAILURE'
         print('This branch does not supported')
@@ -70,7 +71,7 @@ def runPipeline() {
               name: docker-sock
             - mountPath: /etc/secrets/service-account/
               name: google-service-account
-        - name: fuchicorptools
+        - name: myapptools
           image: fuchicorp/buildtools
           imagePullPolicy: Always
           command:
@@ -96,7 +97,7 @@ def runPipeline() {
 
   podTemplate(name: k8slabel, label: k8slabel, yaml: slavePodTemplate) {
       node(k8slabel) {
-        container('fuchicorptools') {
+        container('myapptools') {
           stage("Pulling the code") {
             checkout scm
           }
@@ -110,10 +111,10 @@ def runPipeline() {
           stage('Push image') {
 
 
-            withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: "nexus-docker-creds", usernameVariable: 'docker_username', passwordVariable: 'docker_password']]) {
+            withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: "hub-docker-creds", usernameVariable: 'docker_username', passwordVariable: 'docker_password']]) {
               sh """#!/bin/bash -e
 
-              until docker login --username ${env.docker_username} --password ${env.docker_password} https://docker.mybestsea.com
+              until docker login --username ${env.docker_username} --password ${env.docker_password} https://hub.docker.com/
               do
                 echo "Trying to login to docker private system"
                 sleep 3
@@ -123,7 +124,7 @@ def runPipeline() {
 
 
              // Push image to the Nexus with new release
-              docker.withRegistry('https://docker.mybestsea.com', 'nexus-docker-creds') {
+              docker.withRegistry('https://hub.docker.com/', 'hub-docker-creds') {
                   dockerImage.push("0.${BUILD_NUMBER}")
                   // messanger.sendMessage("slack", "SUCCESS", slackChannel)
 

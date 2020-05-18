@@ -1,0 +1,27 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DevOpsLeadsApi.Api", "DevOpsLeadsApi.Api\DevOpsLeadsApi.Api.csproj", "{3EFFD04E-2391-4FC4-978C-1F6E70B12336}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{ABCDAAC7-B343-44F9-AE63-ABD861AEAF61}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DevOpsLeadsApi.UnitTests", "DevOpsLeadsApi.UnitTests\DevOpsLeadsApi.UnitTests.csproj", "{A82765EA-B6DD-453F-93E5-40DAA59EAE86}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{3EFFD04E-2391-4FC4-978C-1F6E70B12336}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3EFFD04E-2391-4FC4-978C-1F6E70B12336}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3EFFD04E-2391-4FC4-978C-1F6E70B12336}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3EFFD04E-2391-4FC4-978C-1F6E70B12336}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A82765EA-B6DD-453F-93E5-40DAA59EAE86}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A82765EA-B6DD-453F-93E5-40DAA59EAE86}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A82765EA-B6DD-453F-93E5-40DAA59EAE86}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A82765EA-B6DD-453F-93E5-40DAA59EAE86}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{A82765EA-B6DD-453F-93E5-40DAA59EAE86} = {ABCDAAC7-B343-44F9-AE63-ABD861AEAF61}
+	EndGlobalSection
+EndGlobal

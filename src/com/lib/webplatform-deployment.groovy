@@ -41,7 +41,7 @@ def runPipeline() {
       string( defaultValue: 'webplatform', name: 'mysql_database', value: 'dbwebplatform', description: 'Please enter database name'),
       string(defaultValue: 'webplatformUser',  name: 'mysql_user',description: 'Please enter a username for MySQL', trim: true),
       string(defaultValue: 'webplatformPassword',  name: 'mysql_password',description: 'Please enter a password for MySQL', trim: true),
-      string(defaultValue: 'fuchicorp-google-service-account', name: 'common_service_account', description: 'Please enter service Account ID', trim: true)
+      string(defaultValue: 'mybestsea-google-service-account', name: 'common_service_account', description: 'Please enter service Account ID', trim: true)
       ]
       )])
 
@@ -52,7 +52,7 @@ def runPipeline() {
             stage('Poll code') {
               checkout scm
               sh """#!/bin/bash -e
-              cp -rf ${common_user} ${WORKSPACE}/deployment/terraform/fuchicorp-service-account.json
+              cp -rf ${common_user} ${WORKSPACE}/deployment/terraform/mybestsea-service-account.json
               """
             }
 
@@ -64,10 +64,10 @@ def runPipeline() {
             mysql_host                =  "webplatform-mysql"
             webplatform_namespace     =  "${environment}"
             webplatform_password      =  "${mysql_password}"
-            webplatform_image         =  "docker.fuchicorp.com/${SelectedDockerImage}"
-            api_platform_image        =  "docker.fuchicorp.com/${ApiSelectedDockerImage}"
+            webplatform_image         =  "docker.mybestsea.com/${SelectedDockerImage}"
+            api_platform_image        =  "docker.mybestsea.com/${ApiSelectedDockerImage}"
             environment               =  "${environment}"
-            credentials               =  "./fuchicorp-service-account.json"
+            credentials               =  "./mybestsea-service-account.json"
             deployment_name           =  "webplatform"
             """.stripIndent()
           }
@@ -85,7 +85,7 @@ def runPipeline() {
                 }
                 if (branch == 'prod') {
                   sh("""
-                    git config --global user.email 'jenkins@fuchicorp.com'
+                    git config --global user.email 'jenkins@mybestsea.com'
                     git config --global user.name  'Jenkins'
                     git config --global credential.helper cache
                     """)
@@ -162,7 +162,7 @@ def findDockerImages(branchName) {
   def versionList = []
   def token       = ""
   def myJsonreader = new JsonSlurper()
-  def nexusData = myJsonreader.parse(new URL("https://nexus.fuchicorp.com/service/rest/v1/components?repository=fuchicorp"))
+  def nexusData = myJsonreader.parse(new URL("https://nexus.mybestsea.com/service/rest/v1/components?repository=mybestsea"))
   nexusData.items.each {
     if (it.name.contains(branchName)) {
        versionList.add(it.name + ':' + it.version)
@@ -171,7 +171,7 @@ def findDockerImages(branchName) {
   while (true) {
     if (nexusData.continuationToken) {
       token = nexusData.continuationToken
-      nexusData = myJsonreader.parse(new URL("https://nexus.fuchicorp.com/service/rest/v1/components?repository=fuchicorp&continuationToken=${token}"))
+      nexusData = myJsonreader.parse(new URL("https://nexus.mybestsea.com/service/rest/v1/components?repository=mybestsea&continuationToken=${token}"))
       nexusData.items.each {
         if (it.name.contains(branchName)) {
            versionList.add(it.name + ':' + it.version)

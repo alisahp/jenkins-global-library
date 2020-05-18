@@ -5,7 +5,7 @@ package com.lib
 
 def sendMessage(String type, String status, String channel, String message = null) {
   String color        = ""
-  String slackUrl     = "https://fuchicorp.slack.com/services/hooks/jenkins-ci/"
+  String slackUrl     = "https://mybestsea.slack.com/services/hooks/jenkins-ci/"
   String slackToken   = "slack-token"
 
   if (!channel.contains("#")) {
@@ -18,7 +18,7 @@ def sendMessage(String type, String status, String channel, String message = nul
       if (message == null ) {
         message = """
         Jenkins Job was successfully built.
-        email: fuchicorpsolution@gmail.com
+        email: mybestseasolution@gmail.com
         SUCCESS: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})
         """.stripIndent()
       }
@@ -29,7 +29,7 @@ def sendMessage(String type, String status, String channel, String message = nul
       if (message == null ) {
         message = """
         Jenkins build is breaking for some reason. Please go to job and take actions.
-        email: fuchicorpsolution@gmail.com
+        email: mybestseasolution@gmail.com
         FAILED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})")
         """.stripIndent()   }
       break
@@ -39,7 +39,7 @@ def sendMessage(String type, String status, String channel, String message = nul
       if (message == null ) {
         message = """
         The Jenkins job was stared
-        email: fuchicorpsolution@gmail.com
+        email: mybestseasolution@gmail.com
         STARTED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL}).
         """.stripIndent()   }
       break
@@ -49,7 +49,7 @@ def sendMessage(String type, String status, String channel, String message = nul
       if (message == null ) {
         message = """
         ##### Terraform Plan (Check) the Changes #####
-        email: fuchicorpsolution@gmail.com
+        email: mybestseasolution@gmail.com
         PLANED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL}).
         """.stripIndent()   }
       break
@@ -59,7 +59,7 @@ def sendMessage(String type, String status, String channel, String message = nul
       if (message == null ) {
         message = """
         ##### Terraform Applying the Changes #####
-        email: fuchicorpsolution@gmail.com
+        email: mybestseasolution@gmail.com
         APPLIED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL}).
         """.stripIndent()   }
       break
@@ -69,7 +69,7 @@ def sendMessage(String type, String status, String channel, String message = nul
       if (message == null ) {
         message = """
         ##### Terraform Destroing #####
-        email: fuchicorpsolution@gmail.com
+        email: mybestseasolution@gmail.com
         DESTROYED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL}).
         """.stripIndent()   }
       break
@@ -81,7 +81,7 @@ def sendMessage(String type, String status, String channel, String message = nul
       if (message == null ) {
         message = """
         The Jenkins job was ${status} and was successfully builded.
-        email: fuchicorpsolution@gmail.com
+        email: mybestseasolution@gmail.com
         ${status}: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL}).
         """.stripIndent()   }
       break

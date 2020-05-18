@@ -21,7 +21,7 @@ def runPipeline() {
   def slackChannel = "devops-alerts"
   def repositoryName = "${JOB_NAME}"
       .split('/')[0]
-      .replace('-fuchicorp', '')
+      .replace('-mybestsea', '')
       .replace('-build', '')
       .replace('-deploy', '')
   def dockerImage
@@ -76,7 +76,7 @@ def runPipeline() {
       stage('Push image') {
 
          // Push image to the Nexus with new release
-          docker.withRegistry('https://docker.fuchicorp.com', 'nexus-private-admin-credentials') {
+          docker.withRegistry('https://hub.docker.com/', 'nexus-private-admin-credentials') {
               dockerImage.push("0.${BUILD_NUMBER}")
               messanger.sendMessage("slack", "SUCCESS", slackChannel)
 
@@ -90,8 +90,8 @@ def runPipeline() {
        }
 
        stage('clean up') {
-         sh "docker rmi docker.fuchicorp.com/${repositoryName}:0.${BUILD_NUMBER} --force "
-         sh "docker rmi docker.fuchicorp.com/${repositoryName}:latest --force"
+         sh "docker rmi docker.mybestsea.com/${repositoryName}:0.${BUILD_NUMBER} --force "
+         sh "docker rmi docker.mybestsea.com/${repositoryName}:latest --force"
          sh "rm -rf ${WORKSPACE}/*"
        }
 

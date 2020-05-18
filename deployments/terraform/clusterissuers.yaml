@@ -1,0 +1,15 @@
+apiVersion: cert-manager.io/v1alpha2
+kind: ClusterIssuer
+metadata:
+  name: mybestsea-prod
+spec:
+  acme:
+    email: alisevhp@gmail.com
+    privateKeySecretRef:
+      name: mybestsea-issuer-account-key
+    server: https://acme-v02.api.letsencrypt.org/directory
+    solvers:
+    - http01:
+        ingress:
+          class: nginx
+

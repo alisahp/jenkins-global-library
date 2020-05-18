@@ -17,7 +17,7 @@ def runPipeline() {
   String repoUrl     = scm.getUserRemoteConfigs()[0].getUrl().replace('https://', '')
   def deploymentName = "${JOB_NAME}"
                         .split('/')[0]
-                        .replace('-fuchicorp', '')
+                        .replace('-mybestsea', '')
                         .replace('-build', '')
                         .replace('-deploy', '')
 
@@ -42,7 +42,7 @@ def runPipeline() {
       choice(name: 'selectedDockerImage', choices: findDockerImages(deploymentName), description: 'Please select docker image to deploy!'),
       booleanParam(defaultValue: false, description: 'Apply All Changes', name: 'terraformApply'),
       booleanParam(defaultValue: false, description: 'Destroy deployment', name: 'terraformDestroy'),
-      string(defaultValue: 'fuchicorp-google-service-account', name: 'common_service_account', description: 'Please enter service Account ID', trim: true),
+      string(defaultValue: 'mybestsea-google-service-account', name: 'common_service_account', description: 'Please enter service Account ID', trim: true),
       string(defaultValue: 'webplatform-configuration', name: 'deployment_configuration', description: 'Please enter configuration name', trim: true)
       ])])
 
@@ -54,7 +54,7 @@ def runPipeline() {
             stage('Poll code') {
               checkout scm
               sh """#!/bin/bash -e
-              cp -rf ${common_user} ${WORKSPACE}/deployment/terraform/fuchicorp-service-account.json
+              cp -rf ${common_user} ${WORKSPACE}/deployment/terraform/mybestsea-service-account.json
               """
             }
 
@@ -63,8 +63,8 @@ def runPipeline() {
             file.write """
             deployment_environment    =  "${environment}"
             deployment_name           =  "${deploymentName}"
-            deployment_image          =  "docker.fuchicorp.com/${selectedDockerImage}"
-            credentials               =  "./fuchicorp-service-account.json"
+            deployment_image          =  "docker.mybestsea.com/${selectedDockerImage}"
+            credentials               =  "./mybestsea-service-account.json"
             """.stripIndent()
             sh "cat ${deployment_config} >> ${WORKSPACE}/deployment/terraform/deployment_configuration.tfvars"
           }
@@ -82,7 +82,7 @@ def runPipeline() {
                 }
                 if (branch == "prod") {
                   sh("""
-                    git config --global user.email 'jenkins@fuchicorp.com'
+                    git config --global user.email 'jenkins@mybestsea.com'
                     git config --global user.name  'Jenkins'
                     git config --global credential.helper cache
                     """)
@@ -160,7 +160,7 @@ def findDockerImages(nameApp) {
   def foundRepo    = ""
   def token        = ""
   def myJsonreader = new JsonSlurper()
-  def nexusData = myJsonreader.parse(new URL("https://registry.hub.docker.com/v2/repositories/fuchicorp/"))
+  def nexusData = myJsonreader.parse(new URL("https://registry.hub.docker.com/v2/repositories/mybestsea/"))
   def repoVersions = []
 
   nexusData.results.each {
@@ -169,7 +169,7 @@ def findDockerImages(nameApp) {
       }
     }
 
-  nexusData = myJsonreader.parse(new URL("https://registry.hub.docker.com/v2/repositories/fuchicorp/${foundRepo}/tags/"))
+  nexusData = myJsonreader.parse(new URL("https://registry.hub.docker.com/v2/repositories/mybestsea/${foundRepo}/tags/"))
 
   nexusData.results.each {
     repoVersions.add( "${foundRepo}:" +  it.name)
